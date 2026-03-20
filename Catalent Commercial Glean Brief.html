@@ -1,0 +1,733 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalent x Glean — Supporting Business Case</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #ffffff;
+            color: #1d1d1f;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        .page { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #003865 0%, #00507a 60%, #006b8d 100%);
+            margin: 0 -24px;
+            padding: 52px 48px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.5s ease both;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -10%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(0,178,169,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero .brand-row {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            margin-bottom: 24px; position: relative; z-index: 1;
+        }
+        .hero .brand-name {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: rgba(255,255,255,0.8);
+        }
+        .hero .brand-x { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 300; }
+        .hero h1 {
+            font-size: 32px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+            color: #fff; margin-bottom: 10px; position: relative; z-index: 1;
+        }
+        .hero h1 span { color: #00b2a9; }
+        .hero .subtitle {
+            font-size: 15px; color: rgba(255,255,255,0.7); max-width: 520px;
+            margin: 0 auto; position: relative; z-index: 1;
+        }
+
+        /* NAV */
+        .toc {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+            padding: 28px 0 36px;
+            border-bottom: 1px solid rgba(0,56,101,0.06);
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease 0.1s both;
+        }
+        .toc a {
+            font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em;
+            text-transform: uppercase; color: #003865; text-decoration: none;
+            padding: 5px 14px; border-radius: 20px;
+            border: 1px solid rgba(0,56,101,0.1);
+            transition: all 0.2s ease;
+        }
+        .toc a:hover { background: #003865; color: #fff; border-color: #003865; }
+
+        /* SECTION */
+        .section { margin-bottom: 48px; animation: fadeUp 0.5s ease both; }
+        .section-label {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase; color: #00b2a9; margin-bottom: 8px;
+        }
+        .section h2 {
+            font-size: 22px; font-weight: 700; color: #003865;
+            line-height: 1.2; margin-bottom: 16px;
+        }
+        .section p { font-size: 15px; color: #333; margin-bottom: 14px; max-width: 720px; }
+        .section p strong { color: #1d1d1f; }
+
+        /* EXEC SUMMARY CARDS */
+        .exec-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease 0.2s both;
+        }
+        .exec-card {
+            background: #fafbfc; border-radius: 14px; padding: 24px;
+            border: 1px solid rgba(0,56,101,0.05);
+            transition: all 0.2s ease;
+        }
+        .exec-card:hover { box-shadow: 0 2px 12px rgba(0,56,101,0.06); transform: translateY(-2px); }
+        .exec-card .ec-icon { font-size: 24px; margin-bottom: 10px; }
+        .exec-card .ec-title { font-size: 14px; font-weight: 700; color: #003865; margin-bottom: 6px; }
+        .exec-card .ec-desc { font-size: 13px; color: #6e6e73; line-height: 1.55; }
+
+        /* THEME TABLE */
+        .theme-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin: 20px 0 8px; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(0,56,101,0.06);
+        }
+        .theme-table th {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+            text-transform: uppercase; color: #fff; background: #003865;
+            text-align: left; padding: 10px 16px;
+        }
+        .theme-table td {
+            font-size: 13.5px; padding: 12px 16px; vertical-align: top;
+            border-bottom: 1px solid rgba(0,0,0,0.04); color: #333; line-height: 1.55;
+        }
+        .theme-table td:first-child { font-weight: 600; color: #003865; white-space: nowrap; }
+        .theme-table tr:last-child td { border-bottom: none; }
+        .theme-table tr:nth-child(even) td { background: #fafbfc; }
+
+        /* SALESFORCE TABLE */
+        .sf-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: 12px; overflow: hidden; margin: 16px 0;
+            border: 1px solid rgba(0,56,101,0.06);
+        }
+        .sf-table th {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+            text-transform: uppercase; color: #fff; background: #003865;
+            text-align: left; padding: 10px 14px;
+        }
+        .sf-table td {
+            font-size: 13.5px; padding: 12px 14px; vertical-align: top;
+            border-bottom: 1px solid rgba(0,0,0,0.04); color: #333; line-height: 1.5;
+        }
+        .sf-table td:last-child { color: #003865; font-weight: 500; }
+        .sf-table tr:last-child td { border-bottom: none; }
+        .sf-table tr:nth-child(even) td { background: #fafbfc; }
+
+        /* CALLOUT */
+        .callout {
+            background: rgba(0,178,169,0.06); border-left: 3px solid #00b2a9;
+            border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0;
+        }
+        .callout p { font-size: 14px; color: #333; margin: 0; }
+        .callout strong { color: #003865; }
+
+        /* SUMMARY TABLE */
+        .summary-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin: 0 0 8px; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(0,56,101,0.06);
+        }
+        .summary-table th {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+            text-transform: uppercase; color: #fff; background: #003865;
+            text-align: left; padding: 10px 16px;
+        }
+        .summary-table th:last-child { text-align: right; }
+        .summary-table td {
+            font-size: 14px; padding: 12px 16px; vertical-align: top;
+            border-bottom: 1px solid rgba(0,0,0,0.04); color: #333; line-height: 1.5;
+        }
+        .summary-table td:first-child { font-weight: 500; color: #003865; width: 120px; }
+        .summary-table td:last-child { text-align: right; font-weight: 700; color: #003865; white-space: nowrap; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table tr:nth-child(even) td { background: #fafbfc; }
+        .summary-table tr.total-row td {
+            background: rgba(0,56,101,0.04); font-weight: 700; color: #003865;
+            border-top: 2px solid rgba(0,56,101,0.1); font-size: 15px;
+        }
+
+        /* TOTAL BANNER */
+        .total-banner {
+            background: #003865; border-radius: 16px; padding: 32px 32px 28px;
+            text-align: center; margin: 24px 0 8px;
+        }
+        .tb-row {
+            display: flex; justify-content: center; gap: 48px;
+        }
+        .tb-item .tbi-val { font-size: 28px; font-weight: 800; color: #fff; line-height: 1.1; }
+        .tb-item .tbi-val em { color: #00b2a9; font-style: normal; }
+        .tb-item .tbi-lbl { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+        .estimate-note {
+            text-align: center; font-size: 11.5px; color: #86868b;
+            font-style: italic; margin: 12px 0 0;
+        }
+
+        /* PATH TABLE */
+        .path-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: 12px; overflow: hidden; margin: 16px 0;
+            border: 1px solid rgba(0,56,101,0.06);
+        }
+        .path-table th {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+            text-transform: uppercase; color: #fff; background: #003865;
+            text-align: left; padding: 10px 14px;
+        }
+        .path-table td {
+            font-size: 13.5px; padding: 12px 14px; vertical-align: top;
+            border-bottom: 1px solid rgba(0,0,0,0.04); color: #333; line-height: 1.5;
+        }
+        .path-table td:first-child { font-weight: 600; color: #003865; white-space: nowrap; }
+        .path-table tr:last-child td { border-bottom: none; }
+
+        /* CONTACT */
+        .contact-section {
+            background: #fafbfc; border-radius: 16px; padding: 32px;
+            border: 1px solid rgba(0,56,101,0.05); text-align: center;
+            margin-top: 40px;
+        }
+        .contact-section h3 {
+            font-size: 18px; font-weight: 700; color: #003865; margin-bottom: 20px;
+        }
+        .contact-row {
+            display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+        }
+        .contact-card {
+            background: #fff; border-radius: 10px; padding: 18px 28px;
+            border: 1px solid rgba(0,56,101,0.06); min-width: 210px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+        .contact-card .cc-name { font-size: 15px; font-weight: 600; color: #003865; }
+        .contact-card .cc-title { font-size: 12px; color: #86868b; margin-bottom: 8px; }
+        .contact-card a {
+            font-size: 13px; color: #003865; text-decoration: none; font-weight: 500;
+        }
+        .contact-card a:hover { text-decoration: underline; }
+
+        /* APPENDIX DIVIDER */
+        .appendix-divider {
+            margin: 56px 0 48px;
+            padding: 20px 0;
+            border-top: 2px solid #003865;
+            text-align: center;
+        }
+        .appendix-divider .ad-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: #003865;
+            background: #fff; padding: 0 20px;
+            display: inline-block; position: relative; top: -32px;
+        }
+        .appendix-divider h2 {
+            font-size: 26px; font-weight: 700; color: #003865;
+            margin-top: -12px;
+        }
+        .appendix-divider p {
+            font-size: 14px; color: #86868b; margin-top: 6px;
+        }
+
+        /* VALUE CARDS (APPENDIX) */
+        .tier-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px; padding-bottom: 12px;
+            border-bottom: 2px solid rgba(0,56,101,0.06);
+        }
+        .tier-badge {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+            color: #fff;
+        }
+        .tier-badge.t1 { background: #003865; }
+        .tier-badge.t2 { background: #00b2a9; }
+        .tier-badge.t3 { background: #e87722; }
+        .tier-header h3 { font-size: 18px; font-weight: 700; color: #003865; }
+
+        .value-card {
+            background: #fafbfc; border-radius: 14px; padding: 28px 28px 24px;
+            margin-bottom: 20px; border: 1px solid rgba(0,56,101,0.05);
+            transition: all 0.2s ease;
+        }
+        .value-card:hover { box-shadow: 0 2px 12px rgba(0,56,101,0.06); }
+        .vc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .vc-name { font-size: 16px; font-weight: 700; color: #003865; }
+        .vc-value { font-size: 20px; font-weight: 800; color: #003865; white-space: nowrap; }
+        .vc-desc { font-size: 13.5px; color: #555; margin-bottom: 16px; line-height: 1.6; }
+
+        .assume-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            font-size: 13px; border-radius: 10px; overflow: hidden;
+            border: 1px solid rgba(0,56,101,0.06);
+        }
+        .assume-table th {
+            font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+            text-transform: uppercase; color: #86868b; background: #f0f2f4;
+            text-align: left; padding: 8px 12px;
+        }
+        .assume-table td {
+            padding: 8px 12px; vertical-align: top;
+            border-bottom: 1px solid rgba(0,0,0,0.03); color: #333;
+        }
+        .assume-table td:first-child { font-weight: 500; color: #1d1d1f; }
+        .assume-table tr:last-child td { border-bottom: none; }
+        .assume-table .needs-validate {
+            color: #e87722; font-size: 11px; font-weight: 600;
+        }
+
+        .how-list { list-style: none; padding: 0; margin: 12px 0 0; }
+        .how-list li {
+            font-size: 13px; color: #555; padding: 4px 0 4px 20px;
+            position: relative; line-height: 1.55;
+        }
+        .how-list li::before {
+            content: '→'; position: absolute; left: 0; color: #00b2a9; font-weight: 600;
+        }
+
+        /* VALIDATE */
+        .validate-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin: 16px 0;
+        }
+        .validate-item {
+            background: #fafbfc; border-radius: 10px; padding: 14px 16px;
+            border: 1px solid rgba(0,56,101,0.05);
+        }
+        .validate-item .vi-label {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+            text-transform: uppercase; color: #86868b; margin-bottom: 4px;
+        }
+        .validate-item .vi-assumption { font-size: 14px; font-weight: 600; color: #003865; }
+        .validate-item .vi-ask { font-size: 12px; color: #e87722; margin-top: 2px; }
+
+        /* DIVIDER */
+        .divider { width: 48px; height: 3px; background: #00b2a9; border-radius: 2px; margin: 40px auto; opacity: 0.5; }
+
+        /* DISCLAIMER */
+        .disclaimer {
+            text-align: center; font-size: 11.5px; color: #86868b;
+            font-style: italic; margin-top: 32px; padding-top: 24px;
+            border-top: 1px solid rgba(0,0,0,0.04);
+        }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 700px) {
+            .hero { padding: 36px 20px 32px; }
+            .hero h1 { font-size: 26px; }
+            .exec-grid { grid-template-columns: 1fr; }
+            .validate-grid { grid-template-columns: 1fr; }
+            .tb-row { flex-direction: column; gap: 16px; }
+            .value-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="brand-row">
+            <span class="brand-name">Catalent</span>
+            <span class="brand-x">×</span>
+            <span class="brand-name">Glean</span>
+        </div>
+        <h1>Supporting <span>Business Case</span></h1>
+        <p class="subtitle">Assumption-transparent value model for accelerating Catalent's commercial growth with enterprise AI.</p>
+    </div>
+
+    <!-- TOC -->
+    <nav class="toc">
+        <a href="#summary">Executive Summary</a>
+        <a href="#heard">Discovery</a>
+        <a href="#salesforce">Salesforce</a>
+        <a href="#value">Value Summary</a>
+        <a href="#path">Next Steps</a>
+        <a href="#appendix">Appendix</a>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- EXECUTIVE SUMMARY                            -->
+    <!-- ============================================ -->
+
+    <div class="section" id="summary">
+        <div class="section-label">Executive Summary</div>
+        <h2>Why This Matters for Catalent's Commercial Team</h2>
+        <p>Catalent has invested deeply in Salesforce and M365. But the intelligence that wins deals, prevents missteps, and accelerates proposals still lives in silos across dozens of systems, inboxes, and M&A-inherited platforms. Commercial teams are making decisions with partial information.</p>
+        <p>Glean connects all of it into a <strong>single AI-powered intelligence layer</strong> that gives your reps cross-division visibility, faster proposals, and smarter lead prioritization, on top of the tools you already use.</p>
+    </div>
+
+    <div class="exec-grid">
+        <div class="exec-card">
+            <div class="ec-icon">📈</div>
+            <div class="ec-title">Pipeline Acceleration</div>
+            <div class="ec-desc">Score and prioritize leads using data from Salesforce custom objects, Eloqua, Gong, and email. Cross-division customer lookup before every outreach.</div>
+        </div>
+        <div class="exec-card">
+            <div class="ec-icon">⚡</div>
+            <div class="ec-title">Faster Proposals</div>
+            <div class="ec-desc">Auto-retrieve past SOWs, pricing, risk registers, and technical appendices. Minutes instead of days to assemble a competitive proposal.</div>
+        </div>
+        <div class="exec-card">
+            <div class="ec-icon">🛡️</div>
+            <div class="ec-title">Relationship Protection</div>
+            <div class="ec-desc">Prevent blind outreach to prospects who are already major customers in other divisions. Real-time cross-division visibility at the point of action.</div>
+        </div>
+        <div class="exec-card">
+            <div class="ec-icon">🔗</div>
+            <div class="ec-title">Salesforce Amplification</div>
+            <div class="ec-desc">Indexes standard + custom objects (incl. Real Prospect) with record-level permissions. Connects Salesforce to M365, Gong, Eloqua, OpenText, and 100+ more.</div>
+        </div>
+    </div>
+
+    <!-- WHAT WE'VE HEARD -->
+    <div class="section" id="heard">
+        <div class="section-label">Discovery Themes</div>
+        <h2>What We've Heard</h2>
+        <table class="theme-table">
+            <thead><tr><th>Theme</th><th>What It Means</th></tr></thead>
+            <tbody>
+                <tr><td>"All in on Salesforce"</td><td>Major investment with recent workshops. Standard CRM AI tools have limitations on custom objects and cross-system context.</td></tr>
+                <tr><td>Low MQL-to-SQL conversion</td><td>Biologics tracks in a custom object ("Real Prospect"), not standard Leads. Current tools can't reason across this custom data model.</td></tr>
+                <tr><td>Cross-division blindness</td><td>Reps have contacted prospects already significant customers in other divisions. No unified real-time view at point of outreach.</td></tr>
+                <tr><td>Proposal bottlenecks</td><td>Thousands of scopes annually, assembly is slow and dependent on individual memory.</td></tr>
+                <tr><td>Doing more with less</td><td>Growth must come from productivity and intelligence, not proportional headcount increases.</td></tr>
+                <tr><td>AI roadmap in progress</td><td>Copilot deployed for M365. Open question: what fills the gap to true commercial intelligence?</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SALESFORCE -->
+    <div class="section" id="salesforce">
+        <div class="section-label">Platform Fit</div>
+        <h2>How This Amplifies Salesforce</h2>
+        <p>Glean does not replace Salesforce. It makes it smarter by connecting it to the rest of Catalent's enterprise.</p>
+        <table class="sf-table">
+            <thead><tr><th>Salesforce Does Well</th><th>Needs Help With</th><th>How Glean Fills the Gap</th></tr></thead>
+            <tbody>
+                <tr><td>Pipeline management & forecasting</td><td>Reasoning across custom objects + external systems</td><td>Indexes standard + custom objects (incl. Real Prospect) with record-level permissions</td></tr>
+                <tr><td>Activity logging & workflows</td><td>Connecting CRM to emails, proposals, call transcripts</td><td>Cross-system agents unify Salesforce + M365 + Gong + Eloqua</td></tr>
+                <tr><td>Dashboards & analytics</td><td>Pre-call intelligence beyond CRM</td><td>Account 360 agents synthesize CRM, email, proposal history, colleague knowledge</td></tr>
+                <tr><td>Einstein / AgentForce</td><td>Seeing data outside Salesforce</td><td>100+ connectors bring the full enterprise into Salesforce workflows</td></tr>
+            </tbody>
+        </table>
+        <div class="callout">
+            <p><strong>Technical note:</strong> Copilot's Salesforce connector indexes only 5 standard objects. Glean indexes standard and custom objects, mirrors record-level permissions, and exposes this data to AI agents connected to M365, OpenText, and every other system in Catalent's stack.</p>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ESTIMATED VALUE SUMMARY                      -->
+    <!-- ============================================ -->
+
+    <div class="section" id="value">
+        <div class="section-label">Estimated Value Summary</div>
+        <h2>Projected Impact Across Revenue, Productivity & Risk</h2>
+
+        <table class="summary-table">
+            <thead><tr><th>Tier</th><th>Use Case</th><th>Est. Annual Value</th></tr></thead>
+            <tbody>
+                <tr><td>Revenue</td><td>Pipeline Acceleration (MQL-to-SQL)</td><td>$1.5-2.5M</td></tr>
+                <tr><td>Revenue</td><td>Proposal Velocity & Win Rate</td><td>$1-2M</td></tr>
+                <tr><td>Revenue</td><td>Scope Drift Detection & Margin Protection</td><td>$500K-1M</td></tr>
+                <tr><td>Productivity</td><td>Commercial Team Productivity</td><td>$750K-1.2M</td></tr>
+                <tr><td>Productivity</td><td>Knowledge Worker Productivity</td><td>$1-2M</td></tr>
+                <tr><td>Risk</td><td>Cross-Division Incident Avoidance</td><td>$500K-1M</td></tr>
+                <tr><td>Risk</td><td>AI Tool Consolidation</td><td>$250-500K</td></tr>
+                <tr><td>Risk</td><td>IT/HR Ticket Deflection</td><td>$150-250K</td></tr>
+                <tr class="total-row"><td></td><td>Total Estimated Annual Value</td><td>$5-8M/yr</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-banner">
+            <div class="tb-row">
+                <div class="tb-item"><div class="tbi-val">$5<em>-</em>8M<em>/yr</em></div><div class="tbi-lbl">Steady State</div></div>
+                <div class="tb-item"><div class="tbi-val">$2<em>-</em>3M</div><div class="tbi-lbl">Year 1 (pilot + biologics)</div></div>
+                <div class="tb-item"><div class="tbi-val">$10<em>-</em>18M</div><div class="tbi-lbl">3-Year Cumulative</div></div>
+            </div>
+        </div>
+
+        <p class="estimate-note">*All figures are illustrative estimates based on industry benchmarks. See <a href="#appendix" style="color:#003865;">Appendix</a> for detailed assumptions behind each line item.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- NEXT STEPS                                   -->
+    <!-- ============================================ -->
+
+    <div class="section" id="path">
+        <div class="section-label">Next Steps</div>
+        <h2>Recommended Path Forward</h2>
+        <table class="path-table">
+            <thead><tr><th>Step</th><th>Timeline</th><th>Action</th></tr></thead>
+            <tbody>
+                <tr><td>1. Align</td><td>Now</td><td>Validate the 3-5 highest-impact use cases with commercial and technology leadership</td></tr>
+                <tr><td>2. Blueprint</td><td>Weeks 1-2</td><td>Map current-state workflows and quantify savings with real Catalent data</td></tr>
+                <tr><td>3. Pilot</td><td>Month 1</td><td>Deploy to Biologics inside sales (~30-50 reps), measure SQL lift and call prep time</td></tr>
+                <tr><td>4. Readout</td><td>Month 2</td><td>Present measured results with refined ROI model for expansion business case</td></tr>
+                <tr><td>5. Expand</td><td>Months 3-12</td><td>Roll out to broader commercial, PMO, and enterprise based on pilot results</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-section">
+        <h3>Let's Refine This Together</h3>
+        <div class="contact-row">
+            <div class="contact-card">
+                <div class="cc-name">Daniel Leish</div>
+                <div class="cc-title">Strategic Account Executive</div>
+                <a href="mailto:daniel.leish@glean.com">daniel.leish@glean.com</a>
+            </div>
+            <div class="contact-card">
+                <div class="cc-name">Paul Ostrick</div>
+                <div class="cc-title">Sales Development Representative</div>
+                <a href="mailto:paul.ostrick@glean.com">paul.ostrick@glean.com</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- APPENDIX                                     -->
+    <!-- ============================================ -->
+
+    <div class="appendix-divider" id="appendix">
+        <span class="ad-label">Appendix</span>
+        <h2>Detailed Case Breakdown</h2>
+        <p>Transparent assumptions and methodology behind each value driver</p>
+    </div>
+
+    <!-- TIER 1 -->
+    <div class="section">
+        <div class="tier-header">
+            <span class="tier-badge t1">Tier 1</span>
+            <h3>Revenue & Margin Impact</h3>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">1A. Pipeline Acceleration (MQL-to-SQL)</span>
+                <span class="vc-value">$1.5-2.5M/yr</span>
+            </div>
+            <p class="vc-desc">Improve lead qualification by giving reps cross-system intelligence at the point of outreach, including visibility into custom Salesforce objects, engagement history, and cross-division customer data.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Current SQL conversion</td><td>~3%</td><td>Confirmed in Biologics discovery</td></tr>
+                    <tr><td>Target SQL rate</td><td>3.75-4% <span class="needs-validate">validate</span></td><td>25-33% relative improvement; conservative vs. industry benchmarks</td></tr>
+                    <tr><td>Monthly MQLs</td><td>~500 <span class="needs-validate">validate</span></td><td>Estimate for global biologics division</td></tr>
+                    <tr><td>Avg program first-year revenue</td><td>$2-3M <span class="needs-validate">validate</span></td><td>Estimate for biologics CDMO programs</td></tr>
+                    <tr><td>Glean attribution</td><td>15-20%</td><td>Multiple investments drive uplift; Glean provides the cross-system context layer</td></tr>
+                </tbody>
+            </table>
+            <ul class="how-list">
+                <li>Agent indexes Salesforce standard + custom objects (incl. Real Prospect), Eloqua, M365, and Gong</li>
+                <li>Scores and prioritizes MQLs in a daily worklist delivered in Teams</li>
+                <li>Cross-division customer lookup: "This prospect is a major customer in Oral Dose. Here's the account team."</li>
+                <li>Post-call coaching evaluates conversations, flags missed qualification, generates follow-ups</li>
+            </ul>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">1B. Proposal Velocity & Win Rate</span>
+                <span class="vc-value">$1-2M/yr</span>
+            </div>
+            <p class="vc-desc">Accelerate proposal assembly by auto-retrieving past SOWs, pricing, risk registers, and technical appendices. Being first with a higher-quality proposal matters in CDMO.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Active Biologics proposals/yr</td><td>~800 <span class="needs-validate">validate</span></td><td>Catalent runs 10-20K scopes company-wide</td></tr>
+                    <tr><td>Current avg cycle time</td><td>~15 business days <span class="needs-validate">validate</span></td><td>To be confirmed with commercial ops</td></tr>
+                    <tr><td>Cycle time reduction</td><td>15-20%</td><td>McKinsey (2024): AI-assisted proposal tools deliver 10-20% reduction</td></tr>
+                    <tr><td>Win rate improvement</td><td>1-1.5 ppt</td><td>First-mover advantage with higher-quality proposals</td></tr>
+                    <tr><td>Glean attribution</td><td>10-15%</td><td>Proposal quality depends on many factors; Glean accelerates content reuse</td></tr>
+                </tbody>
+            </table>
+            <ul class="how-list">
+                <li>Proposal agent searches past SOWs, budgets, risk registers across M365, OpenText, and Salesforce</li>
+                <li>Retrieves "top N similar programs" with prior pricing, scope, risks, and outcomes</li>
+                <li>Pre-populates financial and risk sections, cites source documents</li>
+                <li>Cuts the "hunting for the right template" phase from days to minutes</li>
+            </ul>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">1C. Scope Drift Detection & Margin Protection</span>
+                <span class="vc-value">$500K-1M/yr</span>
+            </div>
+            <p class="vc-desc">Detect when scientific scope is expanding beyond commercial business intent before cost overruns materialize.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Programs affected by drift/yr</td><td>~30-50 <span class="needs-validate">validate</span></td><td>Portion of active molecule pipeline with scope risk</td></tr>
+                    <tr><td>Avg margin erosion per program</td><td>$150-200K <span class="needs-validate">validate</span></td><td>Excess consumables, extended timelines, unnecessary testing</td></tr>
+                    <tr><td>Detection & recovery rate</td><td>20-30% caught, 50% recovered</td><td>Agent monitors charters, change requests, meeting transcripts</td></tr>
+                </tbody>
+            </table>
+            <ul class="how-list">
+                <li>Agent monitors project documentation, transcripts, and change requests</li>
+                <li>Flags scope expansion beyond commercial intent</li>
+                <li>Surfaces comparable historical programs to justify scope decisions</li>
+                <li>Alerts PMO leads before cost overruns materialize</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TIER 2 -->
+    <div class="section">
+        <div class="tier-header">
+            <span class="tier-badge t2">Tier 2</span>
+            <h3>Commercial Productivity</h3>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">2A. Commercial Team Productivity</span>
+                <span class="vc-value">$750K-1.2M/yr</span>
+            </div>
+            <p class="vc-desc">Cut pre-call research from 30-45 min to 5-10 min. Auto-update CRM from call transcripts. Instant access to account history across all divisions.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Commercial / GTM users</td><td>Estimated commercial team <span class="needs-validate">validate</span></td><td>Inside sales, field sales, marketing, enablement</td></tr>
+                    <tr><td>Time saved</td><td>15-20 min/day per active user</td><td>Pre-call research, CRM updates, account history lookup</td></tr>
+                    <tr><td>Adoption rate</td><td>40-50%</td><td>Realistic for Year 1; grows with maturity</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">2B. Knowledge Worker Productivity</span>
+                <span class="vc-value">$1-2M/yr</span>
+            </div>
+            <p class="vc-desc">Faster search across M&A-fragmented systems, policy lookup, expert finding, and reduced rework for corporate, regulatory, quality, and IT teams.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Time saved</td><td>10-12 min/day per active user</td><td>Below Forrester TEI benchmarks of 15-20 min/day</td></tr>
+                    <tr><td>Adoption rate</td><td>40-50%</td><td>Phased rollout starting with highest-need teams</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TIER 3 -->
+    <div class="section">
+        <div class="tier-header">
+            <span class="tier-badge t3">Tier 3</span>
+            <h3>Risk Reduction & Cost Avoidance</h3>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">3A. Cross-Division Incident Avoidance</span>
+                <span class="vc-value">$500K-1M/yr</span>
+            </div>
+            <p class="vc-desc">Prevent blind outreach to prospects who are already significant customers in other divisions. A single incident can damage a multi-million-dollar relationship.</p>
+            <table class="assume-table">
+                <thead><tr><th>Input</th><th>Assumption</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    <tr><td>Blind outreach incidents/yr</td><td>5-10 (at least 1 major confirmed)</td><td>Cross-division visibility gap</td></tr>
+                    <tr><td>Revenue at risk per incident</td><td>$2-5M</td><td>Major accounts span multiple divisions</td></tr>
+                    <tr><td>Incidents prevented</td><td>2-3/year</td><td>Real-time lookup at point of outreach</td></tr>
+                    <tr><td>Revenue retained per prevention</td><td>$250-500K (conservative)</td><td>Fraction of total relationship value preserved</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">3B. AI Tool Consolidation</span>
+                <span class="vc-value">$250-500K/yr</span>
+            </div>
+            <p class="vc-desc">Glean complements Copilot and Salesforce but can replace 2-4 incremental point-solution AI tools for sales intelligence, content search, and knowledge management.</p>
+        </div>
+
+        <div class="value-card">
+            <div class="vc-top">
+                <span class="vc-name">3C. IT/HR Ticket Deflection</span>
+                <span class="vc-value">$150-250K/yr</span>
+            </div>
+            <p class="vc-desc">Self-service answers to common IT and HR questions reduce ticket volume and free up support resources for higher-value work.</p>
+        </div>
+    </div>
+
+    <!-- INPUTS TO VALIDATE -->
+    <div class="section" id="validate">
+        <div class="section-label">Collaboration</div>
+        <h2>Inputs We'd Like to Validate</h2>
+        <p>To sharpen this model for Catalent, we invite your team to confirm or adjust:</p>
+        <div class="validate-grid">
+            <div class="validate-item">
+                <div class="vi-label">Monthly MQL Volume</div>
+                <div class="vi-assumption">~500 (Biologics)</div>
+                <div class="vi-ask">Confirm exact count</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">SQL Conversion Rate</div>
+                <div class="vi-assumption">~3%</div>
+                <div class="vi-ask">Confirm current and target</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Avg Program Revenue (Yr 1)</div>
+                <div class="vi-assumption">$2-3M</div>
+                <div class="vi-ask">Finance to validate</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Proposals/Year (Biologics)</div>
+                <div class="vi-assumption">~800</div>
+                <div class="vi-ask">Confirm with PMO</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Proposal Cycle Time</div>
+                <div class="vi-assumption">~15 business days</div>
+                <div class="vi-ask">Confirm with commercial ops</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Commercial Team Size</div>
+                <div class="vi-assumption">To be confirmed</div>
+                <div class="vi-ask">HR to validate current headcount</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Salesforce Custom Objects</div>
+                <div class="vi-assumption">Real Prospect + others?</div>
+                <div class="vi-ask">Technology team to scope</div>
+            </div>
+            <div class="validate-item">
+                <div class="vi-label">Phase 1 Systems</div>
+                <div class="vi-assumption">Salesforce, M365, Eloqua, Gong</div>
+                <div class="vi-ask">IT to confirm; OpenText in Phase 2</div>
+            </div>
+        </div>
+        <p style="font-size: 14px; color: #6e6e73; text-align: center; margin-top: 16px;">Once Catalent provides these inputs, we produce a refined model that reflects your actual data and rollout plan.</p>
+    </div>
+
+    <p class="disclaimer">All figures are illustrative estimates based on industry benchmarks, publicly available data, and initial discovery conversations. This is not a guarantee of outcomes. Actual results depend on adoption, data quality, and organizational readiness.</p>
+
+</div>
+</body>
+</html>
